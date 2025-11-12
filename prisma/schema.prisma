@@ -8,6 +8,8 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  // For build time, use a dummy URL if DATABASE_URL is not available
+  // The actual DATABASE_URL will be set at runtime
 }
 
 // Game room/session
