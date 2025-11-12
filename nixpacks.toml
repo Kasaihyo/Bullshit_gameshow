@@ -1,6 +1,0 @@
-[build]
-# Use Node.js 20 to support Vite 7.2+ and SvelteKit
-pkgs = ["nodejs_20"]
-
-[start]
-cmd = "npm run start"
