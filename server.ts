@@ -4,8 +4,9 @@ import { PrismaClient } from '@prisma/client';
 import { nanoid } from 'nanoid';
 import type { ClientToServerEvents, ServerToClientEvents, GameState, Player, Question } from './src/lib/types/game';
 
-// Import SvelteKit handler
-import handler from './.svelte-kit/output/server/index.js';
+// Import SvelteKit handler from the built adapter
+// This uses the Node adapter's handler.js from the build output
+import { handler } from './build/handler.js';
 
 const prisma = new PrismaClient();
 const PORT = parseInt(process.env.PORT || '3000', 10);
