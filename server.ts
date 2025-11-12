@@ -5,7 +5,7 @@ import { nanoid } from 'nanoid';
 import type { ClientToServerEvents, ServerToClientEvents, GameState, Player, Question } from './src/lib/types/game';
 
 // Import SvelteKit handler
-import { handler } from './.svelte-kit/build/index.js';
+import { handler } from './.svelte-kit/output/server/index.js';
 
 const prisma = new PrismaClient();
 const PORT = parseInt(process.env.PORT || '3000', 10);
