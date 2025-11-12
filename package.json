@@ -1,0 +1,39 @@
+{
+  "name": "bullshit-game",
+  "version": "0.1.0",
+  "description": "A real-time multiplayer bluffing party game",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:svelte\" \"npm run dev:socket\"",
+    "dev:svelte": "vite dev",
+    "dev:socket": "node --loader tsx server.ts",
+    "build": "vite build && prisma generate",
+    "start": "prisma db push --skip-generate && node --loader tsx server.ts",
+    "preview": "vite preview",
+    "db:init": "prisma generate && prisma db push",
+    "db:reset": "prisma db push --force-reset",
+    "db:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.0",
+    "nanoid": "^5.0.0",
+    "qrcode": "^1.5.3",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-node": "^5.2.0",
+    "@sveltejs/kit": "^2.48.4",
+    "@sveltejs/vite-plugin-svelte": "^6.2.1",
+    "@types/node": "^24.10.1",
+    "autoprefixer": "^10.4.22",
+    "concurrently": "^9.0.1",
+    "postcss": "^8.5.6",
+    "prisma": "^6.19.0",
+    "svelte": "^5.43.6",
+    "tailwindcss": "^4.1.17",
+    "tsx": "^4.17.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.2"
+  }
+}

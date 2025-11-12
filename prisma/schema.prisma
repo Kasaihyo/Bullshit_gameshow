@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Game room/session
+model Room {
+  id        String   @id @default(cuid())
+  code      String   @unique // 4-6 character room code (e.g., "ABCD")
+  hostId    String?  // Player ID of the host
+  status    String   @default("LOBBY") // LOBBY, ACTIVE, FINISHED
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  players Player[]
+  rounds  Round[]
+}
+
+// Player in a game
+model Player {
+  id        String   @id @default(cuid())
+  roomId    String
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  name      String
+  role      String   @default("judge") // judge or hotseat
+  score     Int      @default(0)
+  ladder    Int      @default(0) // Current position on money ladder
+  connected Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  votes  Vote[]
+  @@unique([roomId, id])
+}
+
+// Question bank
+model Question {
+  id          String   @id @default(cuid())
+  category    String
+  difficulty  Int      @default(1) // 1-5 difficulty
+  question    String
+  options     String   @default("[]") // JSON array of options [A, B, C, D]
+  correct     Int      @default(0) // Correct option index (0-3)
+  explanation String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  rounds Round[]
+}
+
+// Game round (each question)
+model Round {
+  id               String   @id @default(cuid())
+  roomId           String
+  room             Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  questionId       String?
+  question         Question? @relation(fields: [questionId], references: [id])
+
+  hotSeatPlayerId  String?  // Player answering the question
+  hotSeatAnswer    Int?     // Their answer choice (0-3)
+  isCorrect        Boolean?
+
+  storyTimer       Int      @default(45) // Seconds for story
+  voteTimer        Int      @default(15) // Seconds for voting
+
+  advanced         Boolean  @default(false) // Did hot seat advance?
+  eliminated       Boolean  @default(false)
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  votes Vote[]
+}
+
+// Vote record
+model Vote {
+  id        String  @id @default(cuid())
+  roundId   String
+  round     Round   @relation(fields: [roundId], references: [id], onDelete: Cascade)
+
+  playerId  String
+  player    Player  @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  vote      String  // "believe" or "bullshit"
+  correct   Boolean // Was this vote correct?
+
+  createdAt DateTime @default(now())
+
+  @@unique([roundId, playerId])
+}
