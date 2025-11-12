@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "A real-time multiplayer bluffing party game",
   "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
     "dev": "concurrently \"npm run dev:svelte\" \"npm run dev:socket\"",
     "dev:svelte": "vite dev",
