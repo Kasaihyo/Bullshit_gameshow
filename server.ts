@@ -4,6 +4,9 @@ import { PrismaClient } from '@prisma/client';
 import { nanoid } from 'nanoid';
 import type { ClientToServerEvents, ServerToClientEvents, GameState, Player, Question } from './src/lib/types/game';
 
+// Import SvelteKit handler
+import { handler } from './.svelte-kit/build/index.js';
+
 const prisma = new PrismaClient();
 const PORT = parseInt(process.env.PORT || '3000', 10);
 const NODE_ENV = process.env.NODE_ENV || 'development';
@@ -17,8 +20,8 @@ if (NODE_ENV === 'production') {
   CORS_ORIGIN = process.env.VITE_APP_URL;
 }
 
-// Create HTTP server
-const httpServer = createServer();
+// Create HTTP server with SvelteKit handler
+const httpServer = createServer(handler);
 
 // Initialize Socket.io
 const io = new Server<ClientToServerEvents, ServerToClientEvents>(httpServer, {
